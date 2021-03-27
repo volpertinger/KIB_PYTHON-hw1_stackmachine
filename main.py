@@ -14,7 +14,10 @@ class StackMachine:
                          '/': self.div,
                          '==': self.eq,
                          'println': self.println,
-                         'print': self.print}  # dictionary for commands
+                         'print': self.print,
+                         'cast_int': self.cast_int,
+                         'cast_str': self.cast_str
+                         }  # dictionary for commands
 
     def pop(self):
         return self.data_stack.pop()
@@ -68,3 +71,9 @@ class StackMachine:
 
     def print(self):
         print(self.top_of_stack, end=" ")
+
+    def cast_int(self):
+        self.push(int(self.pop()))
+
+    def cast_str(self):
+        self.push(str(self.pop()))
