@@ -23,7 +23,9 @@ class StackMachine:
                          'jmp': self.jmp,
                          'stack': self.stack,
                          'swap': self.swap,
-                         'read': self.read
+                         'read': self.read,
+                         'call': self.call,
+                         'return': self.return_back
                          }  # dictionary for commands
 
     def pop(self):
@@ -128,4 +130,11 @@ class StackMachine:
         self.push(top_new)
 
     def read(self):
-        self.push(int(input()))
+        self.push(input())
+
+    def call(self):
+        self.return_stack.append(self.instruction_pointer)
+        self.jmp()
+
+    def return_back(self):
+        self.instruction_pointer = self.return_stack.pop()
