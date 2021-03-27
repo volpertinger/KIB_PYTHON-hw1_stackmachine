@@ -7,7 +7,7 @@ SM.StackMachine([2, 3, "+", 4, "*", 2, "/", 6, "%", 1, "println", "-", 3, "==", 
 print("--cast--")
 SM.StackMachine([2, "cast_str", "println", 2.3, "cast_int", "println"]).run()
 print("--dup, drop--")
-SM.StackMachine([2, "println", "dup", "+", "println", "drop", "println"]).run()
+SM.StackMachine(['"Hello World!"', "dup", "println", "println", "drop", "drop", "println"]).run()
 print("--if_clause__")
 SM.StackMachine([20, 0, 1, "if", "println"]).run()
 SM.StackMachine([0, 0, 1, "if", "println"]).run()

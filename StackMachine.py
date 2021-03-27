@@ -1,5 +1,6 @@
-# copyright Merzlov Nikolay merzlovnik@mail.ruS
+# copyright Merzlov Nikolay merzlovnik@mail.ru
 
+import StackMachineCompilator as C
 import sys
 
 
@@ -28,6 +29,7 @@ class StackMachine:
                                 'stack': self.stack,
                                 'swap': self.swap,
                                 'read': self.read,
+                                'read_int': self.read_int,
                                 'call': self.call,
                                 'return': self.return_back,
                                 'exit': self.exit,
@@ -139,6 +141,9 @@ class StackMachine:
 
     def read(self):
         self.push(input())
+
+    def read_int(self):
+        self.push(int(input()))
 
     def call(self):
         self.return_stack.append(self.instruction_pointer)
