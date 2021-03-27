@@ -32,19 +32,22 @@ def compile_file(filename):
     procedure_code = []
 
     procedure_depth = 0
+    f_address_in_procedure = True  # if procedure is depth by another procedures, implement %address% for calling
     for element in raw_code:
         if element == ":":
             procedure_depth += 1
             procedure_code.append(element)
+            f_address_in_procedure = False
             continue
         if element == ";":
             procedure_depth -= 1
             procedure_code.append(element)
             continue
         if procedure_depth:
-            if instructions.count(element) == 0 and element.find('"'):
+            if instructions.count(element) == 0 and element.find('"') and f_address_in_procedure:
                 procedure_code.append("%address%")
             procedure_code.append(element)
+            f_address_in_procedure = True
         else:
             if instructions.count(element) == 0 and element.find('"'):
                 main_code.append("%address%")
@@ -54,6 +57,7 @@ def compile_file(filename):
     print(main_code)
     print(procedure_code)
     # -------------------------
+    total_length = len(main_code) + len(procedure_code)
     return raw_code
 
 
