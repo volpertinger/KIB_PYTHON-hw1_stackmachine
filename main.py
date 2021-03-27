@@ -16,7 +16,9 @@ class StackMachine:
                          'println': self.println,
                          'print': self.print,
                          'cast_int': self.cast_int,
-                         'cast_str': self.cast_str
+                         'cast_str': self.cast_str,
+                         'drop': self.drop,
+                         'dup': self.dup
                          }  # dictionary for commands
 
     def pop(self):
@@ -43,7 +45,10 @@ class StackMachine:
             command = self.code[self.instruction_pointer]
             self.instruction_pointer += 1
             self.heap(command)
-            self.top_of_stack = self.data_stack[-1]
+            if len(self.data_stack) > 0:
+                self.top_of_stack = self.data_stack[-1]
+            else:
+                self.top_of_stack = None
 
     def mul(self):
         self.push(self.pop() * self.pop())
@@ -77,3 +82,9 @@ class StackMachine:
 
     def cast_str(self):
         self.push(str(self.pop()))
+
+    def drop(self):
+        self.pop()
+
+    def dup(self):
+        self.push(self.top_of_stack)
