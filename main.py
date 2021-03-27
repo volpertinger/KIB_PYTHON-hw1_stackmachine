@@ -18,7 +18,8 @@ class StackMachine:
                          'cast_int': self.cast_int,
                          'cast_str': self.cast_str,
                          'drop': self.drop,
-                         'dup': self.dup
+                         'dup': self.dup,
+                         'if': self.if_clause
                          }  # dictionary for commands
 
     def pop(self):
@@ -88,3 +89,12 @@ class StackMachine:
 
     def dup(self):
         self.push(self.top_of_stack)
+
+    def if_clause(self):
+        true_clause = self.pop()
+        false_clause = self.pop()
+        condition_if = self.pop()
+        if condition_if:
+            self.push(true_clause)
+        else:
+            self.push(false_clause)
