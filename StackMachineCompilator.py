@@ -3,6 +3,28 @@
 import tokenize
 
 
+def make_procedure_map(procedure_code):
+    f_new_procedure = True  # for correct dictionary of procedures
+    procedure_stack = []
+    procedure_name = None
+    procedures_map = {}
+    for element in procedure_code:
+        if element == ':':
+            f_new_procedure = True
+            procedure_stack = []
+            procedure_name = None
+            continue
+        if f_new_procedure:
+            procedure_name = element
+            f_new_procedure = False
+            continue
+        if not element == ";":
+            procedure_stack.append(element)
+        else:
+            procedures_map.update({procedure_name: procedure_stack})
+    return procedures_map
+
+
 def compile_file(filename):
     instructions = ['*', '%', '+', '-', '/', '==', 'println', 'print', 'cast_int', 'cast_str', 'drop', 'dup', 'if',
                     'jmp', 'stack', 'swap', 'read', 'read_int', 'call', 'return', 'exit', 'store',
@@ -56,8 +78,14 @@ def compile_file(filename):
     print(raw_code)
     print(main_code)
     print(procedure_code)
-    # -------------------------
-    total_length = len(main_code) + len(procedure_code)
+    # --------------------------
+
+    total_length = len(main_code)
+    # --------------------------
+    print(total_length)
+    # --------------------------
+    procedure_map = make_procedure_map(procedure_code)
+    print(procedure_map)
     return raw_code
 
 
