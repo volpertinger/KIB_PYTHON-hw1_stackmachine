@@ -6,7 +6,7 @@ import sys
 class StackMachine:
     def __init__(self, code):
         self.data_stack = []  # main stack for operations
-        self.return_stack = []  # helping procedures
+        self.return_stack = []  # instruction numbers for returning back
         self.instruction_pointer = 0  # current instruction number
         self.code = code  # instructions and operands
         self.top_of_stack = None  # top of data stack
@@ -51,7 +51,7 @@ class StackMachine:
             self.push(command)
         # if command is string for something
         elif isinstance(command, str) and command[0] == command[-1] == '"':
-            self.push(command[1:-1])
+            self.push(command[1:-1])  # push without ""
         else:
             raise RuntimeError("Unknown command: '%s'" % command)
 
@@ -102,7 +102,7 @@ class StackMachine:
         if len(self.data_stack) > 0:
             self.data_stack.pop()
         else:
-            raise RuntimeError("Stack is empty")
+            raise RuntimeError("Stack is empty!")
 
     def dup(self):
         self.push(self.top_of_stack)
