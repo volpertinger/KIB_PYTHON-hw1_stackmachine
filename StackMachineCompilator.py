@@ -4,7 +4,7 @@ import tokenize
 
 
 def compile_file(filename):
-    code = []
+    raw_code = []
     with tokenize.open(filename) as f:
         tokens = tokenize.generate_tokens(f.readline)
         f_comment = False  # for deleting comments from code
@@ -18,12 +18,34 @@ def compile_file(filename):
             if tokval == "\n" or tokval == "', '":
                 continue
             if toknum == tokenize.NUMBER and not f_comment:
-                code.append(int(tokval))
+                raw_code.append(int(tokval))
                 continue
             elif not f_comment:
-                code.append(tokval)
-    print(code)
-    return code
+                raw_code.append(tokval)
+        f.close()
+    procedure_depth = 0  # 0-main, 1,2,3... - for other procedures
+
+    main_code = []
+    procedure_code = []
+
+    procedure_depth = 0;
+    for element in raw_code:
+        if element == ":":
+            procedure_depth += 1
+            procedure_code.append(element)
+            continue
+        if element == ";":
+            procedure_depth -= 1
+            procedure_code.append(element)
+            continue
+        if procedure_depth:
+            procedure_code.append(element)
+        else:
+            main_code.append(element)
+    print(raw_code)
+    print(main_code)
+    print(procedure_code)
+    return raw_code
 
 
 compile_file('code.txt')
