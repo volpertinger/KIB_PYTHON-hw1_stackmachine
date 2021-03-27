@@ -19,11 +19,16 @@ class StackMachine:
                          'cast_str': self.cast_str,
                          'drop': self.drop,
                          'dup': self.dup,
-                         'if': self.if_clause
+                         'if': self.if_clause,
+                         'jmp': self.jmp,
+                         'stack': self.stack,
+                         'swap': self.swap,
+                         'read': self.read
                          }  # dictionary for commands
 
     def pop(self):
         return self.data_stack.pop()
+        # return self.data_stack[-1]
 
     def push(self, value):
         self.data_stack.append(value)
@@ -55,19 +60,19 @@ class StackMachine:
         self.push(self.pop() * self.pop())
 
     def mod(self):
-        tmp = self.pop()
-        self.push(self.pop() % tmp)
+        rhs = self.pop()
+        self.push(self.pop() % rhs)
 
     def add(self):
         self.push(self.pop() + self.pop())
 
     def sub(self):
-        tmp = self.pop()
-        self.push(self.pop() - tmp)
+        rhs = self.pop()
+        self.push(self.pop() - rhs)
 
     def div(self):
-        tmp = self.pop()
-        self.push(self.pop() / tmp)
+        rhs = self.pop()
+        self.push(self.pop() / rhs)
 
     def eq(self):
         self.push(self.pop() == self.pop())
@@ -85,7 +90,10 @@ class StackMachine:
         self.push(str(self.pop()))
 
     def drop(self):
-        self.pop()
+        if len(self.data_stack) > 0:
+            self.data_stack.pop()
+        else:
+            raise RuntimeError("Stack is empty")
 
     def dup(self):
         self.push(self.top_of_stack)
@@ -98,3 +106,26 @@ class StackMachine:
             self.push(true_clause)
         else:
             self.push(false_clause)
+
+    def jmp(self):
+        jump_address = self.pop()
+        if isinstance(jump_address, int) and 0 <= jump_address < len(self.code):
+            self.instruction_pointer = jump_address
+        else:
+            raise RuntimeError("JMP address must be a valid integer.")
+
+    def stack(self):
+        print("Data stack: ", self.data_stack)
+        print("Instruction pointer: ", self.instruction_pointer)
+        print("Return stack: ", self.return_stack)
+
+    def swap(self):
+        top_old = self.top_of_stack
+        self.pop()
+        top_new = self.data_stack[-1]
+        self.pop()
+        self.push(top_old)
+        self.push(top_new)
+
+    def read(self):
+        self.push(int(input()))
