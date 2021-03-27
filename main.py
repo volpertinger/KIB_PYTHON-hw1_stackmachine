@@ -1,5 +1,8 @@
 # copyright Merzlov Nikolay merzlovnik@mail.ruS
 
+import sys
+
+
 class StackMachine:
     def __init__(self, code):
         self.data_stack = []  # main stack for operations
@@ -7,26 +10,30 @@ class StackMachine:
         self.instruction_pointer = 0  # current instruction number
         self.code = code  # instructions and operands
         self.top_of_stack = None  # top of data stack
-        self.heap_map = {'*': self.mul,
-                         '%': self.mod,
-                         '+': self.add,
-                         '-': self.sub,
-                         '/': self.div,
-                         '==': self.eq,
-                         'println': self.println,
-                         'print': self.print,
-                         'cast_int': self.cast_int,
-                         'cast_str': self.cast_str,
-                         'drop': self.drop,
-                         'dup': self.dup,
-                         'if': self.if_clause,
-                         'jmp': self.jmp,
-                         'stack': self.stack,
-                         'swap': self.swap,
-                         'read': self.read,
-                         'call': self.call,
-                         'return': self.return_back
-                         }  # dictionary for commands
+        self.heap = {}  # dictionary with variables
+        self.instruction_map = {'*': self.mul,
+                                '%': self.mod,
+                                '+': self.add,
+                                '-': self.sub,
+                                '/': self.div,
+                                '==': self.eq,
+                                'println': self.println,
+                                'print': self.print,
+                                'cast_int': self.cast_int,
+                                'cast_str': self.cast_str,
+                                'drop': self.drop,
+                                'dup': self.dup,
+                                'if': self.if_clause,
+                                'jmp': self.jmp,
+                                'stack': self.stack,
+                                'swap': self.swap,
+                                'read': self.read,
+                                'call': self.call,
+                                'return': self.return_back,
+                                'exit': self.exit,
+                                'store': self.store,
+                                'load': self.load
+                                }  # dictionary for commands
 
     def pop(self):
         return self.data_stack.pop()
@@ -35,14 +42,14 @@ class StackMachine:
     def push(self, value):
         self.data_stack.append(value)
 
-    def heap(self, command):
+    def instruction(self, command):
         # if command is operation
-        if command in self.heap_map:
-            self.heap_map[command]()
+        if command in self.instruction_map:
+            self.instruction_map[command]()
         # if command is number
         elif isinstance(command, int) or isinstance(command, float):
             self.push(command)
-        # if command is word-operation
+        # if command is string for something
         elif isinstance(command, str) and command[0] == command[-1] == '"':
             self.push(command[1:-1])
         else:
@@ -52,7 +59,7 @@ class StackMachine:
         while self.instruction_pointer < len(self.code):
             command = self.code[self.instruction_pointer]
             self.instruction_pointer += 1
-            self.heap(command)
+            self.instruction(command)
             if len(self.data_stack) > 0:
                 self.top_of_stack = self.data_stack[-1]
             else:
@@ -120,6 +127,7 @@ class StackMachine:
         print("Data stack: ", self.data_stack)
         print("Instruction pointer: ", self.instruction_pointer)
         print("Return stack: ", self.return_stack)
+        print("Heap: ", self.heap)
 
     def swap(self):
         top_old = self.top_of_stack
@@ -138,3 +146,12 @@ class StackMachine:
 
     def return_back(self):
         self.instruction_pointer = self.return_stack.pop()
+
+    def exit(self):
+        sys.exit(0)
+
+    def store(self):
+        self.heap.update({self.pop(): self.pop()})
+
+    def load(self):
+        self.push(self.heap[self.pop()])
