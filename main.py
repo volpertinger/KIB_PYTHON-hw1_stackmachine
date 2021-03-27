@@ -1,4 +1,4 @@
-# copyright Merzlov Nikolay merzlovnik@mail.ru
+# copyright Merzlov Nikolay merzlovnik@mail.ruS
 
 class StackMachine:
     def __init__(self, code):
@@ -13,7 +13,8 @@ class StackMachine:
                          '-': self.sub,
                          '/': self.div,
                          '==': self.eq,
-                         'println': self.println}  # dictionary for commands
+                         'println': self.println,
+                         'print': self.print}  # dictionary for commands
 
     def pop(self):
         return self.data_stack.pop()
@@ -64,3 +65,6 @@ class StackMachine:
 
     def println(self):
         print(self.top_of_stack)
+
+    def print(self):
+        print(self.top_of_stack, end=" ")
