@@ -79,7 +79,7 @@ def compile_file(filename):
     total_length = len(main_code)
     procedure_map = make_procedure_map(procedure_code)
 
-    # change procedure names to address in procedure an main code
+    # change procedure names to address in procedure and main code
     for key_implement in procedure_map:
         for key in procedure_map:
             for i in range(len(procedure_map[key])):
@@ -92,6 +92,7 @@ def compile_file(filename):
                 main_code[i - 1] = total_length
         total_length += len(procedure_map[key_implement])
 
+    # adding procedures at the end of main code
     for key in procedure_map:
         for value in procedure_map[key]:
             main_code.append(value)

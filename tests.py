@@ -1,31 +1,70 @@
 # copyright Merzlov Nikolay merzlovnik@mail.ru
 
 import StackMachine as SM
+import unittest
+
+
+class TestStackMachine(unittest.TestCase):
+
+    def test_arithmetic(self):
+        test_machine = SM.StackMachine(
+            [2, 3, "+", 4, "*", 2, "/", 6, "%", 1, "-", 3, "=="])
+        test_machine.run()
+        self.assertTrue(test_machine.top_of_stack)
+
+    def test_cast(self):
+        test_machine = SM.StackMachine([2, "cast_str"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, "2")
+
+        test_machine = SM.StackMachine(['"2"', "cast_int"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, 2)
+
+    def test_drop(self):
+        test_machine = SM.StackMachine([1, '"2"', "drop"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, 1)
+
+    def test_dup(self):
+        test_machine = SM.StackMachine([1, "dup", "+"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, 2)
+
+    def test_if(self):
+        test_machine = SM.StackMachine([1, '"False"', '"True"', "if"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, "True")
+
+        test_machine = SM.StackMachine([0, '"False"', '"True"', "if"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, 'False')
+
+    def test_jump(self):
+        test_machine = SM.StackMachine([10, 7, "jmp", 0, "*", 0, "*", 1, "*"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, 10)
+
+    def test_swap(self):
+        test_machine = SM.StackMachine([1, 0, "swap", "-"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, -1)
+
+    def test_call_return(self):
+        test_machine = SM.StackMachine([4, "jmp", 50, "return", 2, "call", 2, "*"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, 100)
+
+    def test_load_store(self):
+        test_machine = SM.StackMachine([1, '"a"', "store", 0, '"a"', "load", "-"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, -1)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+exit(101)
 
 code = SM.C.compile_file('code.txt')
 SM.StackMachine(code).run()
-
-print("--arithmetic--")
-SM.StackMachine([2, 3, "+", 4, "*", 2, "/", 6, "%", 1, "println", "-", 3, "==", "print", "print", "println"]).run()
-print("--cast--")
-SM.StackMachine([2, "cast_str", "println", 2.3, "cast_int", "println"]).run()
-print("--dup, drop--")
-SM.StackMachine(['"Hello World!"', "dup", "println", "println", "drop", "drop", "println"]).run()
-print("--if_clause__")
-SM.StackMachine([20, 0, 1, "if", "println"]).run()
-SM.StackMachine([0, 0, 1, "if", "println"]).run()
-print("--jump--")
-SM.StackMachine([2, "jmp", 1, 1, "+", 10, "+", "println"]).run()
-SM.StackMachine([7, "jmp", 1, 1, "+", 10, "+", "println"]).run()
-print("--stack--")
-SM.StackMachine([2, 3, "+", '"something_1"', '"something_2"', "stack"]).run()
-print("--swap--")
-SM.StackMachine([2, 3, "swap", "-", "println"]).run()
-print("--read--")
-SM.StackMachine(["read", "cast_int", 3, "+", "println"]).run()
-print("--call, return--")
-SM.StackMachine([5, "jmp", '"some_call"', "println", "return", 2, "call", 1, 2, "+", "println"]).run()
-print("load, store--")
-SM.StackMachine([1, '"a"', "store", "stack", '"a"', "load", 10, "+", "println"]).run()
-print("--ext--")
-SM.StackMachine([5, "println", "exit", 10, "println"]).run()
