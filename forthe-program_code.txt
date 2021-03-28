@@ -1,0 +1,7 @@
+// getting int from user
+: get_arg print read cast_int ;
+
+// raise number a to power b if b > 0
+"Give me $a" get_arg "a" store
+"Give me $b" get_arg "b" store
+11 jmp exit "sm" println

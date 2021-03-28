@@ -25,6 +25,7 @@ class StackMachine:
                                 'dup': self.dup,
                                 'if': self.if_clause,
                                 'jmp': self.jmp,
+                                'jmp_if': self.jmp_if,
                                 'stack': self.stack,
                                 'swap': self.swap,
                                 'read': self.read,
@@ -123,6 +124,15 @@ class StackMachine:
             self.instruction_pointer = jump_address
         else:
             raise RuntimeError("JMP address must be a valid integer.")
+
+    def jmp_if(self):
+        jump_address = self.pop()
+        condition = self.pop()
+        if condition:
+            if isinstance(jump_address, int) and 0 <= jump_address < len(self.code):
+                self.instruction_pointer = jump_address
+            else:
+                raise RuntimeError("JMP address must be a valid integer.")
 
     def stack(self):
         print("Data stack: ", self.data_stack)

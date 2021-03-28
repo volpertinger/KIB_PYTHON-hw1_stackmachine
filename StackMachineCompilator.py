@@ -26,9 +26,17 @@ def make_procedure_map(procedure_code):
     return procedures_map
 
 
+def increase_jump(code, index):
+    for i in range(len(code)):
+        if code[i] == "jmp" or code[i] == "jmp_if":
+            if isinstance(code[i - 1], int):
+                if code[i - 1] > index:
+                    code[i - 1] += 1
+
+
 def compile_file(filename):
     instructions = ['*', '%', '+', '-', '/', '==', 'println', 'print', 'cast_int', 'cast_str', 'drop', 'dup', 'if',
-                    'jmp', 'stack', 'swap', 'read', 'read_int', 'call', 'return', 'exit', 'store',
+                    'jmp', 'jmp_if', 'stack', 'swap', 'read', 'read_int', 'call', 'return', 'exit', 'store',
                     'load']  # stack for commands
     raw_code = []
     with tokenize.open(filename) as f:
@@ -67,13 +75,15 @@ def compile_file(filename):
             procedure_code.append(element)
             continue
         if procedure_depth:
-            if instructions.count(element) == 0 and element.find('"') and f_address_in_procedure:
-                procedure_code.append("%address%")
+            if instructions.count(element) == 0 and (not isinstance(element, int)) and f_address_in_procedure:
+                if element.find('"'):
+                    procedure_code.append("%address%")
             procedure_code.append(element)
             f_address_in_procedure = True
         else:
-            if instructions.count(element) == 0 and element.find('"'):
-                main_code.append("%address%")
+            if instructions.count(element) == 0 and (not isinstance(element, int)):
+                if element.find('"'):
+                    main_code.append("%address%")
             main_code.append(element)
 
     total_length = len(main_code)
@@ -96,4 +106,7 @@ def compile_file(filename):
     for key in procedure_map:
         for value in procedure_map[key]:
             main_code.append(value)
+    for i in range(len(main_code)):
+        if main_code[i] == "call":
+            increase_jump(main_code, i)
     return main_code
