@@ -4,7 +4,7 @@ import StackMachine as SM
 import unittest
 
 
-class TestStackMachine(unittest.TestCase):
+class Test(unittest.TestCase):
 
     def test_arithmetic(self):
         test_machine = SM.StackMachine(
@@ -59,6 +59,17 @@ class TestStackMachine(unittest.TestCase):
         test_machine = SM.StackMachine([1, '"a"', "store", 0, '"a"', "load", "-"])
         test_machine.run()
         self.assertEqual(test_machine.top_of_stack, -1)
+
+    def test_compilation(self):
+        self.assertEqual(
+            ['"Give me $a"', 41, 'call', '"a"', 'store', '"Give me $b"', 41, 'call', '"b"', 'store', '"Give me $c"', 41,
+             'call',
+             '"c"', 'store', '"Give me $x"', 41, 'call', '"x"', 'store', '"a"', 'load', '"x"', 'load', '*', '"b"',
+             'load', '+',
+             '"x"', 'load', '*', '"c"', 'load', '+', 'dup', 'println', 'stack', 'exit', 'dup', '*', 'return', 'print',
+             'read',
+             'cast_int', 'return'], SM.C.compile_file('code.txt')
+            )
 
 
 if __name__ == '__main__':
