@@ -76,7 +76,7 @@ def compile_file(filename):
                 main_code.append("%address%")
             main_code.append(element)
 
-    total_length = len(main_code) + 1
+    total_length = len(main_code)
     procedure_map = make_procedure_map(procedure_code)
 
     # change procedure names to address in procedure an main code
