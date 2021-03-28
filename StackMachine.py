@@ -1,6 +1,5 @@
 # copyright Merzlov Nikolay merzlovnik@mail.ru
 
-import StackMachineCompilator as C
 import sys
 
 

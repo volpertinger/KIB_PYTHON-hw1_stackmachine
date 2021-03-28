@@ -1,6 +1,7 @@
 # copyright Merzlov Nikolay merzlovnik@mail.ru
 
 import StackMachine as SM
+import StackMachineCompilator as C
 import unittest
 
 
@@ -68,14 +69,9 @@ class Test(unittest.TestCase):
              'load', '+',
              '"x"', 'load', '*', '"c"', 'load', '+', 'dup', 'println', 'stack', 'exit', 'dup', '*', 'return', 'print',
              'read',
-             'cast_int', 'return'], SM.C.compile_file('code.txt')
-            )
+             'cast_int', 'return'], C.compile_file('example_code.txt')
+        )
 
 
 if __name__ == '__main__':
     unittest.main()
-
-exit(101)
-
-code = SM.C.compile_file('code.txt')
-SM.StackMachine(code).run()
