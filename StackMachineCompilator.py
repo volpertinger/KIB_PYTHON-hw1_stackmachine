@@ -26,9 +26,10 @@ def make_procedure_map(procedure_code):
     return procedures_map
 
 
+# increase value between jmp and jmp_if, because procedure=%address% 'call'; and sometimes jmp value should increase
 def increase_jump(code, index):
     for i in range(len(code)):
-        if code[i] == "jmp" or code[i] == "jmp_if":
+        if code[i] == "jmp" or code[i] == "jmp_gtz" or code[i] == "jmp_eqz":
             if isinstance(code[i - 1], int):
                 if code[i - 1] > index:
                     code[i - 1] += 1
@@ -36,7 +37,7 @@ def increase_jump(code, index):
 
 def compile_file(filename):
     instructions = ['*', '%', '+', '-', '/', '==', 'println', 'print', 'cast_int', 'cast_str', 'drop', 'dup', 'if',
-                    'jmp', 'jmp_if', 'stack', 'swap', 'read', 'read_int', 'call', 'return', 'exit', 'store',
+                    'jmp', 'jmp_gtz', 'jmp_eqz', 'stack', 'swap', 'read', 'read_int', 'call', 'return', 'exit', 'store',
                     'load']  # stack for commands
     raw_code = []
     with tokenize.open(filename) as f:
