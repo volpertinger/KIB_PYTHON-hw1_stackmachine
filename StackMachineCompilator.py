@@ -21,6 +21,7 @@ def make_procedure_map(procedure_code):
         if not element == ";":
             procedure_stack.append(element)
         else:
+            procedure_stack.append("return")
             procedures_map.update({procedure_name: procedure_stack})
     return procedures_map
 
@@ -74,19 +75,24 @@ def compile_file(filename):
             if instructions.count(element) == 0 and element.find('"'):
                 main_code.append("%address%")
             main_code.append(element)
-    # --------------------------
-    print(raw_code)
-    print(main_code)
-    print(procedure_code)
-    # --------------------------
 
-    total_length = len(main_code)
-    # --------------------------
-    print(total_length)
-    # --------------------------
+    total_length = len(main_code) + 1
     procedure_map = make_procedure_map(procedure_code)
-    print(procedure_map)
-    return raw_code
 
+    # change procedure names to address in procedure an main code
+    for key_implement in procedure_map:
+        for key in procedure_map:
+            for i in range(len(procedure_map[key])):
+                if key_implement == procedure_map[key][i]:
+                    procedure_map[key][i] = "call"
+                    procedure_map[key][i - 1] = total_length
+        for i in range(len(main_code)):
+            if key_implement == main_code[i]:
+                main_code[i] = "call"
+                main_code[i - 1] = total_length
+        total_length += len(procedure_map[key_implement])
 
-compile_file('code.txt')
+    for key in procedure_map:
+        for value in procedure_map[key]:
+            main_code.append(value)
+    return main_code

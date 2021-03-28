@@ -2,6 +2,9 @@
 
 import StackMachine as SM
 
+code = SM.C.compile_file('code.txt')
+SM.StackMachine(code).run()
+
 print("--arithmetic--")
 SM.StackMachine([2, 3, "+", 4, "*", 2, "/", 6, "%", 1, "println", "-", 3, "==", "print", "print", "println"]).run()
 print("--cast--")
