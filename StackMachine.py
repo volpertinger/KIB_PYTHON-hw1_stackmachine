@@ -18,6 +18,8 @@ class StackMachine:
                                 '/': self.div,
                                 '==': self.eq,
                                 '>': self.grt,
+                                'abs': self.abs,
+                                'negate': self.negate,
                                 'println': self.println,
                                 'print': self.print,
                                 'cast_int': self.cast_int,
@@ -90,6 +92,12 @@ class StackMachine:
 
     def grt(self):
         self.push(self.pop() > self.pop())
+
+    def abs(self):
+        self.push(abs(self.pop()))
+
+    def negate(self):
+        self.push(-1 * self.pop())
 
     def println(self):
         print(self.top_of_stack)

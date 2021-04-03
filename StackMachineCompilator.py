@@ -43,7 +43,8 @@ def increase_jump(code, index):
 
 
 def compile_file(filename):
-    instructions = ['*', '%', '+', '-', '/', '==', '>', 'println', 'print', 'cast_int', 'cast_str', 'drop', 'dup',
+    instructions = ['*', '%', '+', '-', '/', '==', '>', 'abs', 'negate', 'println', 'print', 'cast_int', 'cast_str',
+                    'drop', 'dup',
                     'if',
                     'jmp', 'stack', 'swap', 'read', 'read_int', 'call', 'return', 'exit', 'store',
                     'load']  # stack for commands
