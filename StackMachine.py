@@ -18,6 +18,10 @@ class StackMachine:
                                 '/': self.div,
                                 '==': self.eq,
                                 '>': self.grt,
+                                'and': self.and_bool,
+                                'or': self.or_bool,
+                                'not': self.not_bool,
+                                'xor': self.xor_bool,
                                 'abs': self.abs,
                                 'negate': self.negate,
                                 'println': self.println,
@@ -92,6 +96,24 @@ class StackMachine:
 
     def grt(self):
         self.push(self.pop() > self.pop())
+
+    def and_bool(self):
+        rhs = self.pop()
+        lhs = self.pop()
+        self.push(rhs and lhs)
+
+    def or_bool(self):
+        rhs = self.pop()
+        lhs = self.pop()
+        self.push(rhs or lhs)
+
+    def not_bool(self):
+        self.push(not self.pop())
+
+    def xor_bool(self):
+        rhs = self.pop()
+        lhs = self.pop()
+        self.push(((not rhs) and lhs) or (rhs and (not lhs)))
 
     def abs(self):
         self.push(abs(self.pop()))
