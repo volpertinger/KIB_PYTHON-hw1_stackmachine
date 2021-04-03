@@ -17,6 +17,7 @@ class StackMachine:
                                 '-': self.sub,
                                 '/': self.div,
                                 '==': self.eq,
+                                '>': self.grt,
                                 'println': self.println,
                                 'print': self.print,
                                 'cast_int': self.cast_int,
@@ -25,8 +26,6 @@ class StackMachine:
                                 'dup': self.dup,
                                 'if': self.if_clause,
                                 'jmp': self.jmp,
-                                'jmp_gtz': self.jmp_gtz,
-                                'jmp_eqz': self.jmp_eqz,
                                 'stack': self.stack,
                                 'swap': self.swap,
                                 'read': self.read,
@@ -89,6 +88,9 @@ class StackMachine:
     def eq(self):
         self.push(self.pop() == self.pop())
 
+    def grt(self):
+        self.push(self.pop() > self.pop())
+
     def println(self):
         print(self.top_of_stack)
 
@@ -125,24 +127,6 @@ class StackMachine:
             self.instruction_pointer = jump_address
         else:
             raise RuntimeError("JMP address must be a valid integer.")
-
-    def jmp_gtz(self):
-        jump_address = self.pop()
-        condition = self.pop()
-        if condition > 0:
-            if isinstance(jump_address, int) and 0 <= jump_address < len(self.code):
-                self.instruction_pointer = jump_address
-            else:
-                raise RuntimeError("JMP address must be a valid integer.")
-
-    def jmp_eqz(self):
-        jump_address = self.pop()
-        condition = self.pop()
-        if condition == 0:
-            if isinstance(jump_address, int) and 0 <= jump_address < len(self.code):
-                self.instruction_pointer = jump_address
-            else:
-                raise RuntimeError("JMP address must be a valid integer.")
 
     def stack(self):
         print("Data stack: ", self.data_stack)
