@@ -7,11 +7,47 @@ import unittest
 
 class Test(unittest.TestCase):
 
+    def test_bool(self):
+        test_machine = sm.StackMachine(
+            [2, 3, "and"])
+        test_machine.run()
+        self.assertTrue(test_machine.top_of_stack)
+
+        test_machine = sm.StackMachine(
+            [2, 0, "or"])
+        test_machine.run()
+        self.assertTrue(test_machine.top_of_stack)
+
+        test_machine = sm.StackMachine(
+            [1, 1, "xor"])
+        test_machine.run()
+        self.assertFalse(test_machine.top_of_stack)
+
+        test_machine = sm.StackMachine(
+            [1, "not"])
+        test_machine.run()
+        self.assertFalse(test_machine.top_of_stack)
+
     def test_arithmetic(self):
         test_machine = sm.StackMachine(
             [2, 3, "+", 4, "*", 2, "/", 6, "%", 1, "-", 3, "=="])
         test_machine.run()
         self.assertTrue(test_machine.top_of_stack)
+
+        test_machine = sm.StackMachine(
+            [2, 3, "+", 4, "*", 2, "/", 6, "%", 1, "-", 5, ">"])
+        test_machine.run()
+        self.assertTrue(test_machine.top_of_stack)
+
+        test_machine = sm.StackMachine(
+            [-2, "abs"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, 2)
+
+        test_machine = sm.StackMachine(
+            [2, "negate"])
+        test_machine.run()
+        self.assertEqual(test_machine.top_of_stack, -2)
 
     def test_cast(self):
         test_machine = sm.StackMachine([2, "cast_str"])
